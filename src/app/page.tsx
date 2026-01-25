@@ -121,7 +121,7 @@ export default function HomePage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          I am Sanjith
+          I am pankajan
         </Title>
         <Type />
         <Typography variant="h6" gutterBottom sx={{ maxWidth: 600 }}>
@@ -231,7 +231,7 @@ export default function HomePage() {
         </Typography>
         <Box sx={{ textAlign: 'center' }}>
           <Link href="mailto:vinojithab17@gmail.com" underline="hover" variant="h6" color="primary">
-            shansanjithofficial@gmail.com
+            shanpankajanofficial@gmail.com
           </Link>
         </Box>
       </Container>
@@ -249,20 +249,20 @@ export default function HomePage() {
         })}
       >
         <Typography variant="body2">
-          © {new Date().getFullYear()} Sanjith. All rights reserved.
+          © {new Date().getFullYear()} pankajan. All rights reserved.
         </Typography>
         <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2, mt: 1 }}>
-          <IconButton component="a" href="https://github.com/sanjith1999" target="_blank">
+          <IconButton component="a" href="https://github.com/pankajan1999" target="_blank">
             <GitHubIcon />
           </IconButton>
           <IconButton
             component="a"
-            href="https://www.linkedin.com/in/sanjith-shanmugathashan-1377571b8/"
+            href="https://www.linkedin.com/in/pankajan-shanmugathashan-1377571b8/"
             target="_blank"
           >
             <LinkedInIcon />
           </IconButton>
-          <IconButton component="a" href="mailto:shansanjithofficial@gmail.com">
+          <IconButton component="a" href="mailto:shanpankajanofficial@gmail.com">
             <EmailIcon />
           </IconButton>
         </Box>

@@ -164,7 +164,7 @@ export interface Section {
 //     ],
 //     image: "/images/microMouse/mouse.jpeg",
 //     githubLink:
-//       "https://github.com/sanjith1999/SINDiB-MicroMouse/tree/master?source=post_page-----c3c682946275---------------------------------------",
+//       "https://github.com/pankajan1999/SINDiB-MicroMouse/tree/master?source=post_page-----c3c682946275---------------------------------------",
 //     liveLink: "",
 //     duration: "2 months",
 //     teamSize: "Team of 3",
