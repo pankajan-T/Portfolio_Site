@@ -1,4 +1,3 @@
-import React from 'react';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
 import Typewriter from 'typewriter-effect';
@@ -23,7 +22,7 @@ function Type() {
     >
       <Typewriter
         options={{
-          strings: ['DSP/FPGA Engineer', 'ENTC Graduate'],
+          strings: ['Senior DSP/FPGA Engineer', 'UoM ENTC Graduate', 'VLSI Researcher', 'Digital Design Architect', 'Quantum Computing Enthusiast', 'Neuromorphic Computing Explorer'],
           autoStart: true,
           loop: true,
           deleteSpeed: 100,

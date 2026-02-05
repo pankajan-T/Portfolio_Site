@@ -39,7 +39,7 @@ const Logo: React.FC<LogoProps> = ({ size, className, imageSrc }) => {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
     >
-      {imageSrc ? <AvatarImage src={imageSrc} alt="Avatar" size={size} /> : <LogoText>S</LogoText>}
+      {imageSrc ? <AvatarImage src={imageSrc} alt="Avatar" size={size} /> : <LogoText>C</LogoText>}
     </LogoContainer>
   );
 };

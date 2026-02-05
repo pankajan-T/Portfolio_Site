@@ -1,136 +1,274 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
-import { useParams, useRouter } from 'next/navigation';
+import EmailIcon from '@mui/icons-material/Email';
+import GitHubIcon from '@mui/icons-material/GitHub';
+import LinkedInIcon from '@mui/icons-material/LinkedIn';
+import {
+  Box,
+  Button,
+  Card,
+  CardActions,
+  CardContent,
+  CardMedia,
+  Container,
+  Grid,
+  IconButton,
+  Link,
+  Paper,
+  Typography,
+} from '@mui/material';
+import { useRouter } from 'next/navigation';
+import * as React from 'react';
+import { Project } from '../../../data/projectsData';
+
+import Type from '@/app/components/type';
+import { useProjectStore } from '@/store/public-project-store';
 import axios from 'axios';
-import { Container, Typography, Box, Button, Paper } from '@mui/material';
-import ProjectForm from '@/app/components/projectForm';
-import { Project } from '@/app/data/projectsData';
-import Image from 'next/image';
-import AdminHeader from '@/app/components/adminHeader';
-import { usePrivateProjectStore } from '@/store/private-project-store';
-import { ProjectDoc } from '@/app/models/projects';
+import { motion } from 'framer-motion';
+import { useEffect, useState } from 'react';
+import styled from 'styled-components';
+import Header from '../../../components/header';
+import LoadingBackdrop from '../../../components/LoadingBackdrop';
+import ProjectCardSkeleton from '../../../components/ProjectSkeliton';
+const Title = styled(motion.h1)`
+  font-size: 3.5rem;
+  margin-bottom: 1rem;
+  text-align: center;
 
-export default function ProjectDetailPage() {
-  const params = useParams();
-  const router = useRouter();
-  const id = Array.isArray(params.id) ? params.id[0] : params.id;
-  const getProject = usePrivateProjectStore((state) => state.getProjectById);
-  const [project, setProject] = useState<Project | null>(getProject(id || '') ?? null);
+  @media (max-width: 768px) {
+    font-size: 2rem;
+  }
+`;
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const [user, setUser] = useState<any>(null);
-
-  // 1️⃣ Check auth
-  useEffect(() => {
-    fetch('/api/auth/me')
-      .then((res) => res.json())
-      .then((data) => setUser(data))
-      .catch(() => setUser({ loggedIn: false }));
-  }, []);
-
-  // 2️⃣ Fetch project
-  useEffect(() => {
-    if (!user?.loggedIn || !id) return;
-
-    const fetchProject = async () => {
-      if (project) return;
+export default function HomePage() {
+  const [projects, setProjects] = useState<Project[]>(useProjectStore((state) => state.projects));
+  const [loading, setLoading] = useState(false);
+  const [loadingProjects, setLoadingProjects] = useState(false);
+  // const publicProjects = useProjectStore((state) => state.projects);
+  const setPublicProjects = useProjectStore((state) => state.setProjects);
+  // async function fetchAll() {
+  //   const res = await axios.get('/api/projects/visible');
+  //   setProjects(res.data);
+  // }
+  async function fetchAll() {
+    if (!projects || projects.length === 0) {
       try {
-        const res = await fetch(`/api/projects/${id}`);
-        if (!res.ok) throw new Error('Failed to fetch project');
-
-        const json = await res.json();
-        setProject(json);
-      } catch (err) {
-        console.error(err);
+        setLoadingProjects(true);
+        const res = await axios.get('/api/projects/visible');
+        setProjects(res.data);
+        setPublicProjects(res.data);
+      } finally {
+        setLoadingProjects(false);
       }
-    };
-
-    fetchProject();
-  }, [user, id, project]);
-
-  // 3️⃣ Conditional rendering
-  if (!user) return <p>Loading...</p>;
-
-  if (!user.loggedIn)
-    return (
-      <Container sx={{ py: 8 }}>
-        <Typography variant="h6" color="error">
-          Not authorized — please login
-        </Typography>
-        <Button sx={{ mt: 2 }} onClick={() => router.push('/login')}>
-          Go to Login
-        </Button>
-      </Container>
-    );
-
-  if (!project) {
-    return (
-      <Container sx={{ py: 8 }}>
-        <Typography>Loading project...</Typography>
-      </Container>
-    );
+    }
   }
 
+  useEffect(() => {
+    fetchAll();
+  });
+
+  const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
+  const router = useRouter();
+  const recentProjects = projects.slice(0, 3);
+  const handleNavClick = (id: string) => {
+    const section = document.getElementById(id);
+    if (section) {
+      section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+    console.log(mobileMenuOpen);
+    setMobileMenuOpen(false);
+  };
+
+  const handleViewDetails = (projectId: string | number) => {
+    setLoading(true);
+    window.scrollTo(0, 0);
+
+    router.push(`/project/${projectId}`);
+  };
+
+  const handleViewAllDetails = () => {
+    setLoading(true);
+    window.scrollTo(0, 0);
+
+    router.push(`/all-projects`);
+  };
+
+  // const AdminViewAll = () => {
+  //   window.scrollTo(0, 0);
+  //   router.push(`/admin/projects`);
+  // };
+
   return (
-    <Box sx={{ p: 3 }}>
-      <AdminHeader />
-      <Container sx={{ py: 4 }}>
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-          <Typography variant="h4">{project.title}</Typography>
-          <Box>
-            <Button variant="outlined" onClick={() => router.push(`/admin/projects/view/${id}`)}>
-              preview
-            </Button>
-            <Button variant="outlined" onClick={() => router.push('/admin/projects')}>
-              Back
-            </Button>
-          </Box>
-        </Box>
+    <Box sx={{ bgcolor: 'background.default', color: 'text.primary' }}>
+      {/* Navbar */}
+      <Header />
 
-        <Paper sx={{ p: 2, mb: 3 }}>
-          <Typography variant="subtitle1">Preview</Typography>
-          {/* {project.image && <Image alt= {project.title}src={project.image} style={{ maxWidth: 300 }} />} */}
-          {project.image && (
-            <Box sx={{ maxWidth: 300, width: '100%', height: 'auto', position: 'relative' }}>
-              <Image
-                alt={project.title}
-                src={project.image}
-                fill
-                style={{ objectFit: 'contain' }}
-              />
-            </Box>
-          )}
-          <Typography variant="body1" sx={{ mt: 1 }}>
-            {project.longDescription}
-          </Typography>
-        </Paper>
+      {/* Hero Section */}
+      <Box
+        id="home"
+        sx={{
+          minHeight: '80vh',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          flexDirection: 'column',
+          textAlign: 'center',
+          p: 4,
+        }}
+      >
+        <Title
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          I am pankajan
+        </Title>
+        <Type />
+        <Typography variant="h6" gutterBottom sx={{ maxWidth: 600 }}>
+          I am an aspiring Electronic Engineer who loves sharing my experience with community.
+        </Typography>
+        <Button
+          variant="contained"
+          color="primary"
+          sx={{ mt: 3 }}
+          onClick={() => handleNavClick('projects')}
+        >
+          View My Work
+        </Button>
+        {/* <Button variant="contained" color="primary" sx={{ mt: 3 }} onClick={() => AdminViewAll()}>
+          Admin View All Projects
+        </Button> */}
+      </Box>
 
-        <Typography variant="h6">Edit project</Typography>
-        <ProjectForm
-          initial={project as unknown as Partial<ProjectDoc>}
-          submitLabel="Update"
-          submitMethod="PUT"
-          onSaved={(updated) => {
-            setProject(updated);
-            alert('Saved');
-          }}
-        />
+      {/* About Section */}
+      <Container id="about" sx={{ py: 8 }}>
+        <Typography variant="h4" align="center" gutterBottom>
+          About Me
+        </Typography>
+        <Typography variant="body1" align="center" sx={{ maxWidth: 800, mx: 'auto' }}>
+        Passionate Electronic & Telecommunication Engineering graduate with hands-on experience in Accelerators, FPGAs, Digital Design, DSP, VLSI, RF, Neuromorphic computing, Quantum Computing, AI/Machine
+        Learning, Mathematics, and Embedded Systems, with a strong aptitude for creative, technical, and problem-solving skills. Proven ability to drive R&D projects from concept to hardware deployment. Actively seeking opportunities
+        to advance cutting-edge research, with a keen interest in learning new frontiers, tackling complex problems, and
+        adapting to new technologies, with the ability to work both independently and in a team.
+        </Typography>
+      </Container>
 
-        <Box sx={{ mt: 2 }}>
-          <Button
-            color="error"
-            variant="outlined"
-            onClick={async () => {
-              if (!confirm('Delete project?')) return;
-              await axios.delete(`/api/projects/${id}`);
-              router.push('/admin/projects');
-            }}
-          >
-            Delete project
+      {/* Projects Section */}
+      <Container id="projects" sx={{ py: 8 }}>
+        <Typography variant="h4" align="center" gutterBottom>
+          Recent Projects
+        </Typography>
+        <Grid container spacing={4}>
+          {loadingProjects
+            ? Array.from(new Array(3)).map((_, index) => (
+                <Grid key={index} size={{ xs: 12, md: 4 }}>
+                  <ProjectCardSkeleton />
+                </Grid>
+              ))
+            : recentProjects.map((project, idx) => (
+                <Grid key={idx} size={{ xs: 12, md: 4 }}>
+                  <Card sx={{ borderRadius: 2, boxShadow: 3, height: '100%' }}>
+                    <CardMedia
+                      component="img"
+                      height="200"
+                      image={project.image} // Example: "/images/ecommerce.png" or external URL
+                      alt={project.title}
+                    />
+                    <CardContent>
+                      <Typography variant="h6" gutterBottom>
+                        {project.title}
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        {project.description}
+                        {/* {project.createdAt.toString() ?? "No Date available."} */}
+                      </Typography>
+                    </CardContent>
+                    <CardActions>
+                      <Button size="small" onClick={() => handleViewDetails(project._id ?? '')}>
+                        View Details →
+                      </Button>
+                      {project.liveLink && (
+                        <Button
+                          size="small"
+                          component="a"
+                          href={project.liveLink}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          Live Demo
+                        </Button>
+                      )}
+                      {project.githubLink && (
+                        <Button
+                          size="small"
+                          component="a"
+                          href={project.githubLink}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          Source Code
+                        </Button>
+                      )}
+                    </CardActions>
+                  </Card>
+                </Grid>
+              ))}
+        </Grid>
+        <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
+          <Button variant="contained" onClick={() => handleViewAllDetails()}>
+            View All Projects →
           </Button>
         </Box>
       </Container>
+
+      {/* Contact Section */}
+      <Container id="contact" sx={{ py: 8 }}>
+        <Typography variant="h4" align="center" gutterBottom>
+          Contact Me
+        </Typography>
+        <Typography variant="body1" align="center" sx={{ mb: 3 }}>
+          I am always open to new opportunities and interesting projects. Feel free to reach out!
+        </Typography>
+        <Box sx={{ textAlign: 'center' }}>
+          <Link href="mailto:pankajan.t.spankajan.com" underline="hover" variant="h6" color="primary">
+            pankajan.t.spankajan.com
+          </Link>
+        </Box>
+      </Container>
+
+      {/* Footer */}
+      <Paper
+        component="footer"
+        square
+        sx={(theme) => ({
+          mt: 8,
+          p: 3,
+          textAlign: 'center',
+          bgcolor: theme.palette.background.paper, // use theme
+          color: theme.palette.text.primary, // optional, for text
+        })}
+      >
+        <Typography variant="body2">
+          © {new Date().getFullYear()} pankajan. All rights reserved.
+        </Typography>
+        <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2, mt: 1 }}>
+          <IconButton component="a" href="https://github.com/pankajan-T" target="_blank">
+            <GitHubIcon />
+          </IconButton>
+          <IconButton
+            component="a"
+            href="https://https://lk.linkedin.com/in/pankajan-thurairatnam"
+            target="_blank"
+          >
+            <LinkedInIcon />
+          </IconButton>
+          <IconButton component="a" href="mailto:pankajan.t.spankajan.com">
+            <EmailIcon />
+          </IconButton>
+        </Box>
+      </Paper>
+
+      <LoadingBackdrop open={loading} />
     </Box>
   );
 }

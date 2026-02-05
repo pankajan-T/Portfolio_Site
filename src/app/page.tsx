@@ -146,10 +146,10 @@ export default function HomePage() {
           About Me
         </Typography>
         <Typography variant="body1" align="center" sx={{ maxWidth: 800, mx: 'auto' }}>
-          Working on advanced FPGA/DSP modem systems with involvement in the entire pipeline —
-          MATLAB modeling, system design, RTL development, and hardware deployment. This end-to-end
-          responsibility has helped me build both the technical depth and the architectural view
-          needed to deliver efficient and reliable designs.
+        Passionate Electronic & Telecommunication Engineering graduate with hands-on experience in Accelerators, FPGAs, Digital Design, DSP, VLSI, RF, Neuromorphic computing, Quantum Computing, AI/Machine
+        Learning, Mathematics, and Embedded Systems, with a strong aptitude for creative, technical, and problem-solving skills. Proven ability to drive R&D projects from concept to hardware deployment. Actively seeking opportunities
+        to advance cutting-edge research, with a keen interest in learning new frontiers, tackling complex problems, and
+        adapting to new technologies, with the ability to work both independently and in a team.
         </Typography>
       </Container>
 
@@ -230,8 +230,8 @@ export default function HomePage() {
           I am always open to new opportunities and interesting projects. Feel free to reach out!
         </Typography>
         <Box sx={{ textAlign: 'center' }}>
-          <Link href="mailto:vinojithab17@gmail.com" underline="hover" variant="h6" color="primary">
-            shanpankajanofficial@gmail.com
+          <Link href="mailto:pankajan.t.s@gmail.com" underline="hover" variant="h6" color="primary">
+            pankajan.t.s@gmail.com
           </Link>
         </Box>
       </Container>
@@ -252,17 +252,17 @@ export default function HomePage() {
           © {new Date().getFullYear()} pankajan. All rights reserved.
         </Typography>
         <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2, mt: 1 }}>
-          <IconButton component="a" href="https://github.com/pankajan1999" target="_blank">
+          <IconButton component="a" href="https://github.com/pankajan-T" target="_blank">
             <GitHubIcon />
           </IconButton>
           <IconButton
             component="a"
-            href="https://www.linkedin.com/in/pankajan-shanmugathashan-1377571b8/"
+            href="https://lk.linkedin.com/in/pankajan-thurairatnam?trk=public_profile_browsemap"
             target="_blank"
           >
             <LinkedInIcon />
           </IconButton>
-          <IconButton component="a" href="mailto:shanpankajanofficial@gmail.com">
+          <IconButton component="a" href="mailto:pankajan.t.s@gmail.com">
             <EmailIcon />
           </IconButton>
         </Box>

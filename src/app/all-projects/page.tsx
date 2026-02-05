@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import HomeIcon from '@mui/icons-material/Home';
 
@@ -58,8 +58,11 @@ export default function AllProjects() {
   //   const res = await axios.get('/api/projects/visible');
   //   setProjects(res.data);
   // }
+  const isFetchingProjects = useRef(false);
   async function fetchAll() {
     if (!allProjects || allProjects.length === 0) {
+      if (isFetchingProjects.current) return;
+      isFetchingProjects.current = true;
       try {
         setLoadingProjects(true);
         const res = await axios.get('/api/projects/visible');
@@ -67,13 +70,16 @@ export default function AllProjects() {
         setPublicProjects(res.data);
       } finally {
         setLoadingProjects(false);
+        isFetchingProjects.current = false;
       }
     }
   }
 
   useEffect(() => {
     fetchAll();
-  });
+    // run once on mount; fetchAll is guarded
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     // This runs only when the page mounts

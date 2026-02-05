@@ -36,7 +36,11 @@ function Header() {
             <Button onClick={() => handleNavClick('home')}>Home</Button>
             <Button onClick={() => handleNavClick('about')}>About</Button>
             <Button onClick={() => handleNavClick('projects')}>Projects</Button>
+            <Button onClick={() => handleNavClick('hobbies')}>Hobbies</Button>
             <Button onClick={() => handleNavClick('contact')}>Contact</Button>
+            <Button component="a" href="/CV.pdf" download>
+              CV
+            </Button>
           </Box>
           <IconButton
             edge="end"
@@ -60,7 +64,11 @@ function Header() {
           <Button onClick={() => handleNavClick('home')}>Home</Button>
           <Button onClick={() => handleNavClick('about')}>About</Button>
           <Button onClick={() => handleNavClick('projects')}>Projects</Button>
+          <Button onClick={() => handleNavClick('hobbies')}>Hobbies</Button>
           <Button onClick={() => handleNavClick('contact')}>Contact</Button>
+          <Button component="a" href="/CV.pdf" download>
+            CV
+          </Button>
         </Box>
       )}
     </>
